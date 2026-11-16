@@ -1,4 +1,4 @@
-package cl.duoc.gestionoportunidades.ui.formulario
+package cl.duoc.gestionoportunidades.ui.screens
 
 import android.Manifest
 import android.content.ActivityNotFoundException
@@ -74,12 +74,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.draw.clip
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -92,6 +92,7 @@ import cl.duoc.gestionoportunidades.ui.components.CampoTexto
 import cl.duoc.gestionoportunidades.ui.components.SelectorChips
 import cl.duoc.gestionoportunidades.ui.components.TituloSeccion
 import cl.duoc.gestionoportunidades.validacion.CampoOportunidad as C
+import cl.duoc.gestionoportunidades.viewmodels.OportunidadFormViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

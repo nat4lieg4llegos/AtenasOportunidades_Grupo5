@@ -1,4 +1,4 @@
-package cl.duoc.gestionoportunidades.data.repository
+package cl.duoc.gestionoportunidades.repository
 
 import cl.duoc.gestionoportunidades.data.local.SesionManager
 import cl.duoc.gestionoportunidades.data.model.Usuario

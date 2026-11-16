@@ -1,4 +1,4 @@
-package cl.duoc.gestionoportunidades.ui.inicio
+package cl.duoc.gestionoportunidades.ui.screens
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
@@ -55,10 +55,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import cl.duoc.gestionoportunidades.data.repository.EstadoSync
+import cl.duoc.gestionoportunidades.repository.EstadoSync
 import cl.duoc.gestionoportunidades.ui.components.TarjetaIndicador
 import cl.duoc.gestionoportunidades.ui.theme.EstadoAlerta
 import cl.duoc.gestionoportunidades.ui.theme.EstadoExito
+import cl.duoc.gestionoportunidades.viewmodels.Alerta
+import cl.duoc.gestionoportunidades.viewmodels.InicioViewModel
+import cl.duoc.gestionoportunidades.viewmodels.TipoAlerta
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

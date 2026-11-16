@@ -6,8 +6,8 @@ import cl.duoc.gestionoportunidades.data.local.OportunidadDao
 import cl.duoc.gestionoportunidades.data.local.SeguimientoDao
 import cl.duoc.gestionoportunidades.data.local.SesionManager
 import cl.duoc.gestionoportunidades.data.remote.RetrofitInstance
-import cl.duoc.gestionoportunidades.data.repository.AuthRepository
-import cl.duoc.gestionoportunidades.data.repository.OportunidadRepository
+import cl.duoc.gestionoportunidades.repository.AuthRepository
+import cl.duoc.gestionoportunidades.repository.OportunidadRepository
 
 /**
  * Contenedor de dependencias simple (Service Locator): crea una sola instancia de la base

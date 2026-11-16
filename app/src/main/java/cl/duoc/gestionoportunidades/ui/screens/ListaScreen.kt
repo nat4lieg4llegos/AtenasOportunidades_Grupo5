@@ -1,4 +1,4 @@
-package cl.duoc.gestionoportunidades.ui.lista
+package cl.duoc.gestionoportunidades.ui.screens
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -56,6 +56,9 @@ import cl.duoc.gestionoportunidades.data.model.Oportunidad
 import cl.duoc.gestionoportunidades.ui.components.CampoSelector
 import cl.duoc.gestionoportunidades.ui.components.EtiquetaEstado
 import cl.duoc.gestionoportunidades.ui.components.EtiquetaPrioridad
+import cl.duoc.gestionoportunidades.viewmodels.Filtros
+import cl.duoc.gestionoportunidades.viewmodels.ListaViewModel
+import cl.duoc.gestionoportunidades.viewmodels.Orden
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable

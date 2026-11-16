@@ -1,10 +1,11 @@
-package cl.duoc.gestionoportunidades.ui.lista
+package cl.duoc.gestionoportunidades.viewmodels
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import cl.duoc.gestionoportunidades.data.model.Oportunidad
 import cl.duoc.gestionoportunidades.di.AppContainer
+import java.time.LocalDate
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -12,7 +13,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 
 enum class Orden(val etiqueta: String) { FECHA("Fecha del evento"), PRIORIDAD("Prioridad"), RECIENTES("Recién actualizadas") }
 

@@ -1,4 +1,4 @@
-package cl.duoc.gestionoportunidades.ui.seguimiento
+package cl.duoc.gestionoportunidades.ui.screens
 
 import android.Manifest
 import android.os.Build
@@ -46,6 +46,7 @@ import cl.duoc.gestionoportunidades.ui.components.CampoSelector
 import cl.duoc.gestionoportunidades.ui.components.CampoTexto
 import cl.duoc.gestionoportunidades.ui.components.TituloSeccion
 import cl.duoc.gestionoportunidades.validacion.CampoSeguimiento as C
+import cl.duoc.gestionoportunidades.viewmodels.SeguimientoFormViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

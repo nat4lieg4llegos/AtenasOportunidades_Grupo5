@@ -1,4 +1,4 @@
-package cl.duoc.gestionoportunidades.ui.login
+package cl.duoc.gestionoportunidades.ui.screens
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
@@ -54,6 +54,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cl.duoc.gestionoportunidades.ui.components.CampoTexto
 import cl.duoc.gestionoportunidades.validacion.CampoLogin
+import cl.duoc.gestionoportunidades.viewmodels.LoginViewModel
 
 @Composable
 fun LoginScreen(alIngresar: () -> Unit, vm: LoginViewModel = viewModel()) {

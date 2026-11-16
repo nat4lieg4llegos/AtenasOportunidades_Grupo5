@@ -1,10 +1,10 @@
 package cl.duoc.gestionoportunidades.validacion
 
 import cl.duoc.gestionoportunidades.data.model.Catalogos
+import java.time.LocalDate
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import java.time.LocalDate
 
 class ValidadorSeguimientoYLoginTest {
     private val hoy = LocalDate.of(2026, 10, 26)

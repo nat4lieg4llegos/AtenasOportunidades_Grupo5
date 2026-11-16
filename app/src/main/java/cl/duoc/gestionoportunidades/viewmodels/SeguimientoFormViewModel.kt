@@ -1,4 +1,4 @@
-package cl.duoc.gestionoportunidades.ui.seguimiento
+package cl.duoc.gestionoportunidades.viewmodels
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -11,12 +11,12 @@ import cl.duoc.gestionoportunidades.nativo.Recordatorios
 import cl.duoc.gestionoportunidades.validacion.CampoSeguimiento
 import cl.duoc.gestionoportunidades.validacion.SeguimientoFormulario
 import cl.duoc.gestionoportunidades.validacion.ValidadorSeguimiento
+import java.time.LocalDate
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 
 data class SeguimientoFormState(
     val oportunidad: Oportunidad? = null,

@@ -1,4 +1,4 @@
-package cl.duoc.gestionoportunidades.ui.login
+package cl.duoc.gestionoportunidades.viewmodels
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel

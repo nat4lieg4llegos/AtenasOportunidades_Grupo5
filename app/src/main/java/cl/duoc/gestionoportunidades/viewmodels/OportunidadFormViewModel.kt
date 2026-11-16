@@ -1,4 +1,4 @@
-package cl.duoc.gestionoportunidades.ui.formulario
+package cl.duoc.gestionoportunidades.viewmodels
 
 import android.app.Application
 import android.graphics.Bitmap
@@ -13,12 +13,12 @@ import cl.duoc.gestionoportunidades.nativo.UbicacionHelper
 import cl.duoc.gestionoportunidades.validacion.CampoOportunidad
 import cl.duoc.gestionoportunidades.validacion.OportunidadFormulario
 import cl.duoc.gestionoportunidades.validacion.ValidadorOportunidad
+import java.time.LocalDate
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 
 data class OportunidadFormState(
     val form: OportunidadFormulario = OportunidadFormulario(),

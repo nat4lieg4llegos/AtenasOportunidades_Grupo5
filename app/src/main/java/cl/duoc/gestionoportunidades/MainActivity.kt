@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import cl.duoc.gestionoportunidades.di.AppContainer
 import cl.duoc.gestionoportunidades.nativo.Recordatorios
-import cl.duoc.gestionoportunidades.ui.navigation.AppNavigation
+import cl.duoc.gestionoportunidades.navigation.AppNavigation
 import cl.duoc.gestionoportunidades.ui.theme.GestionOportunidadesTheme
 
 class MainActivity : ComponentActivity() {

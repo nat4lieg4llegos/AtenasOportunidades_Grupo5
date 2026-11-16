@@ -10,12 +10,12 @@ import android.location.Location
 import android.location.LocationManager
 import android.os.Build
 import androidx.core.content.ContextCompat
+import java.util.Locale
+import kotlin.coroutines.resume
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
-import java.util.Locale
-import kotlin.coroutines.resume
 
 /** Comuna y región aproximadas obtenidas a partir de una lectura puntual de ubicación. */
 data class UbicacionAproximada(val comuna: String?, val regionTexto: String?, val latitud: Double, val longitud: Double)

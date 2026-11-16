@@ -1,4 +1,4 @@
-package cl.duoc.gestionoportunidades.ui.detalle
+package cl.duoc.gestionoportunidades.ui.screens
 
 import android.Manifest
 import android.graphics.Bitmap
@@ -86,10 +86,11 @@ import cl.duoc.gestionoportunidades.ui.components.EtiquetaEstado
 import cl.duoc.gestionoportunidades.ui.components.EtiquetaPrioridad
 import cl.duoc.gestionoportunidades.ui.components.FilaDato
 import cl.duoc.gestionoportunidades.ui.components.TituloSeccion
-import kotlinx.coroutines.launch
+import cl.duoc.gestionoportunidades.viewmodels.DetalleViewModel
 import java.text.NumberFormat
 import java.time.LocalDate
 import java.util.Locale
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -3,10 +3,10 @@ package cl.duoc.gestionoportunidades.nativo
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * Recurso nativo: cámara. La foto (afiche, stand o material del evento) se recibe desde la

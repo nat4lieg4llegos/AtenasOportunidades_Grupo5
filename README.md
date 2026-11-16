@@ -47,7 +47,7 @@ App (Compose)  ──Retrofit (JSON)──►  atenas-api (Spring Boot)  ──J
 | `data/remote/RetrofitInstance.kt` | Instancia única de Retrofit: URL base, Gson, tiempos de espera y log |
 | `data/remote/OportunidadDto.kt` | Forma del JSON del servidor |
 | `data/remote/MapeoOportunidad.kt` | Conversión modelo ↔ JSON (id local vs. id del servidor) |
-| `data/repository/OportunidadRepository.kt` | Coordina SQLite + API y expone el estado de sincronización |
+| `repository/OportunidadRepository.kt` | Coordina SQLite + API y expone el estado de sincronización (`EstadoSync`) |
 | `res/xml/network_security_config.xml` | Permite HTTP solo hacia el servidor de desarrollo (10.0.2.2) |
 | `atenas-api/` | Microservicio Spring Boot (ver su README) |
 
@@ -70,7 +70,7 @@ App (Compose)  ──Retrofit (JSON)──►  atenas-api (Spring Boot)  ──J
 ```
 UI (Jetpack Compose + Material 3)
    │  eventos ↓            ↑ StateFlow (estado inmutable)
-ViewModel (una por pantalla)  ──→  validacion/ (reglas puras, sin Android, con pruebas unitarias)
+ViewModel (viewmodels/, uno por pantalla)  ──→  validacion/ (reglas puras, sin Android, con pruebas unitarias)
    │
 Repository (única fuente de datos, emite la lista actualizada tras cada cambio)
    │                         │
@@ -79,21 +79,28 @@ DAO  ──→  SQLite             Retrofit (data/remote) ──→ atenas-api (
 
 ```
 app/src/main/java/cl/duoc/gestionoportunidades/
-├── data/
-│   ├── local/        AtenasDbHelper, OportunidadDao, SeguimientoDao, SesionManager
-│   ├── model/        Oportunidad, Seguimiento, Usuario, Catalogos (valores del caso), Fechas
-│   ├── remote/       OportunidadApiService, RetrofitInstance, OportunidadDto, MapeoOportunidad
-│   └── repository/   OportunidadRepository (SQLite + API), AuthRepository
-├── di/               AppContainer (instancias únicas de repositorios)
-├── validacion/       ValidadorLogin, ValidadorOportunidad, ValidadorSeguimiento
-├── nativo/           UbicacionHelper, FotoHelper, Recordatorios, RecordatorioReceiver
+├── MainActivity.kt          Punto de entrada: tema, canal de notificaciones y AppNavigation
+├── navigation/
+│   ├── Screen.kt            Rutas como sealed class (data object / data class con buildRoute)
+│   ├── NavigationEvent.kt   Eventos de navegación (NavigateTo, PopBackStack, NavigateUp)
+│   └── AppNavigation.kt     NavHost: escucha los eventos de MainViewModel y anima las transiciones
+├── viewmodels/              MainViewModel (navegación) y un ViewModel + UiState por pantalla
+│                            Login, Inicio, Lista, OportunidadForm, Detalle, SeguimientoForm
 ├── ui/
-│   ├── components/   Campos con validación visual, etiquetas de estado, indicadores
-│   ├── login/ inicio/ lista/ formulario/ detalle/ seguimiento/   (Screen + ViewModel)
-│   ├── navigation/   AppNavigation (rutas y transiciones), Rutas
-│   └── theme/        Tema Material 3 de marca (claro y oscuro)
-└── MainActivity.kt
+│   ├── screens/             Pantallas Compose: Login, Inicio, Lista, OportunidadForm, Detalle, SeguimientoForm
+│   ├── components/          Campos con validación visual, etiquetas de estado, indicadores
+│   └── theme/               Tema Material 3 de marca (claro y oscuro)
+├── repository/              OportunidadRepository (SQLite + API), AuthRepository, EstadoSync
+├── data/
+│   ├── local/               AtenasDbHelper, OportunidadDao, SeguimientoDao, SesionManager
+│   ├── model/               Oportunidad, Seguimiento, Usuario, Catalogos (valores del caso), Fechas
+│   └── remote/              OportunidadApiService, RetrofitInstance, OportunidadDto, MapeoOportunidad
+├── di/                      AppContainer (instancias únicas de repositorios)
+├── validacion/              ValidadorLogin, ValidadorOportunidad, ValidadorSeguimiento
+└── nativo/                  UbicacionHelper, FotoHelper, Recordatorios, RecordatorioReceiver
 ```
+
+**Navegación (patrón de la Guía 10):** las pantallas no tocan el `NavController`. Piden la navegación a `MainViewModel` (`navigateTo(Screen.Detalle(id))`, `navigateBack()`, `navigateUp()`), que emite un `NavigationEvent`; `AppNavigation` lo recibe y lo ejecuta. Las rutas son tipo-safe gracias a la sealed class `Screen`.
 
 La validación está **desacoplada de la interfaz**: las pantallas solo envían eventos al ViewModel, el ViewModel usa los validadores de `validacion/` y la pantalla dibuja los errores que recibe en el estado. Tras el primer intento de guardar, los errores se revalidan en vivo mientras el usuario corrige.
 

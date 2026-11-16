@@ -1,4 +1,4 @@
-package cl.duoc.gestionoportunidades.data.repository
+package cl.duoc.gestionoportunidades.repository
 
 import cl.duoc.gestionoportunidades.data.local.OportunidadDao
 import cl.duoc.gestionoportunidades.data.local.SeguimientoDao
@@ -9,6 +9,11 @@ import cl.duoc.gestionoportunidades.data.model.Seguimiento
 import cl.duoc.gestionoportunidades.data.remote.OportunidadApiService
 import cl.duoc.gestionoportunidades.data.remote.aDto
 import cl.duoc.gestionoportunidades.data.remote.aOportunidad
+import java.io.File
+import java.io.IOException
+import java.time.LocalDate
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,19 +26,6 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
-import java.io.File
-import java.io.IOException
-import java.time.LocalDate
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
-
-/** Estado de la conexión con el microservicio, para mostrarlo en el panel. */
-sealed interface EstadoSync {
-    data object Inactivo : EstadoSync
-    data object Sincronizando : EstadoSync
-    data class Sincronizado(val hora: String, val rechazadas: Int = 0) : EstadoSync
-    data class SinConexion(val detalle: String) : EstadoSync
-}
 
 /**
  * Única fuente de datos para los ViewModels. Expone la lista como StateFlow y la

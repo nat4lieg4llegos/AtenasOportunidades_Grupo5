@@ -1,4 +1,4 @@
-package cl.duoc.gestionoportunidades.ui.inicio
+package cl.duoc.gestionoportunidades.viewmodels
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -6,15 +6,15 @@ import androidx.lifecycle.viewModelScope
 import cl.duoc.gestionoportunidades.data.model.Fechas
 import cl.duoc.gestionoportunidades.data.model.Oportunidad
 import cl.duoc.gestionoportunidades.data.model.Usuario
-import cl.duoc.gestionoportunidades.data.repository.EstadoSync
 import cl.duoc.gestionoportunidades.di.AppContainer
+import cl.duoc.gestionoportunidades.repository.EstadoSync
+import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.time.LocalDate
-import java.time.temporal.ChronoUnit
 
 enum class TipoAlerta { ATRASADO, PROXIMO, SIN_CONTACTO }
 

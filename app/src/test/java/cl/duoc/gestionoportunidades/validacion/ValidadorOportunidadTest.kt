@@ -1,11 +1,11 @@
 package cl.duoc.gestionoportunidades.validacion
 
+import java.time.LocalDate
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import java.time.LocalDate
 
 class ValidadorOportunidadTest {
     private val hoy = LocalDate.of(2026, 10, 26)
