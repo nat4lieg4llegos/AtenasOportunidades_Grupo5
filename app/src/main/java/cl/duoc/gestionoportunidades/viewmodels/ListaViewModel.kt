@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import cl.duoc.gestionoportunidades.data.model.Oportunidad
 import cl.duoc.gestionoportunidades.di.AppContainer
+import cl.duoc.gestionoportunidades.repository.OportunidadRepository
 import java.time.LocalDate
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -35,8 +36,10 @@ data class ListaUiState(
     val cargando: Boolean = true
 )
 
-class ListaViewModel(app: Application) : AndroidViewModel(app) {
-    private val repo = AppContainer.oportunidades(app)
+class ListaViewModel @JvmOverloads constructor(
+    app: Application,
+    private val repo: OportunidadRepository = AppContainer.oportunidades(app)
+) : AndroidViewModel(app) {
     private val filtros = MutableStateFlow(Filtros())
 
     val estado: StateFlow<ListaUiState> = combine(repo.oportunidades, filtros) { lista, f ->

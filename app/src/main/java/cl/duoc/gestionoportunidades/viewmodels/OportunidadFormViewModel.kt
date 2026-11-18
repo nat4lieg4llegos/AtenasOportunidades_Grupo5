@@ -8,6 +8,8 @@ import cl.duoc.gestionoportunidades.data.model.Catalogos
 import cl.duoc.gestionoportunidades.data.model.Fechas
 import cl.duoc.gestionoportunidades.data.model.Oportunidad
 import cl.duoc.gestionoportunidades.di.AppContainer
+import cl.duoc.gestionoportunidades.repository.AuthRepository
+import cl.duoc.gestionoportunidades.repository.OportunidadRepository
 import cl.duoc.gestionoportunidades.nativo.FotoHelper
 import cl.duoc.gestionoportunidades.nativo.UbicacionHelper
 import cl.duoc.gestionoportunidades.validacion.CampoOportunidad
@@ -35,10 +37,12 @@ data class OportunidadFormState(
     val mensaje: String? = null
 )
 
-class OportunidadFormViewModel(app: Application) : AndroidViewModel(app) {
-    private val repo = AppContainer.oportunidades(app)
-    private val auth = AppContainer.auth(app)
-    private val ubicacion = UbicacionHelper(app)
+class OportunidadFormViewModel @JvmOverloads constructor(
+    app: Application,
+    private val repo: OportunidadRepository = AppContainer.oportunidades(app),
+    private val auth: AuthRepository = AppContainer.auth(app),
+    private val ubicacion: UbicacionHelper = UbicacionHelper(app)
+) : AndroidViewModel(app) {
 
     private val _estado = MutableStateFlow(OportunidadFormState())
     val estado: StateFlow<OportunidadFormState> = _estado.asStateFlow()

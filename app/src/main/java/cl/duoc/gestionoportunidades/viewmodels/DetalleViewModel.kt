@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import cl.duoc.gestionoportunidades.data.model.Oportunidad
 import cl.duoc.gestionoportunidades.data.model.Seguimiento
 import cl.duoc.gestionoportunidades.di.AppContainer
+import cl.duoc.gestionoportunidades.repository.AuthRepository
+import cl.duoc.gestionoportunidades.repository.OportunidadRepository
 import cl.duoc.gestionoportunidades.nativo.Recordatorios
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,9 +24,11 @@ data class DetalleUiState(
     val mensaje: String? = null
 )
 
-class DetalleViewModel(app: Application) : AndroidViewModel(app) {
-    private val repo = AppContainer.oportunidades(app)
-    private val auth = AppContainer.auth(app)
+class DetalleViewModel @JvmOverloads constructor(
+    app: Application,
+    private val repo: OportunidadRepository = AppContainer.oportunidades(app),
+    private val auth: AuthRepository = AppContainer.auth(app)
+) : AndroidViewModel(app) {
 
     private val _estado = MutableStateFlow(DetalleUiState())
     val estado: StateFlow<DetalleUiState> = _estado.asStateFlow()

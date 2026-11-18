@@ -15,6 +15,7 @@ import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -30,7 +31,8 @@ import retrofit2.HttpException
 class OportunidadRepository(
     private val oportunidadDao: OportunidadDao,
     private val seguimientoDao: SeguimientoDao,
-    private val api: OportunidadApiService
+    private val api: OportunidadApiService,
+    private val io: CoroutineDispatcher = Dispatchers.IO
 ) {
     private val _oportunidades = MutableStateFlow<List<Oportunidad>>(emptyList())
     val oportunidades: StateFlow<List<Oportunidad>> = _oportunidades.asStateFlow()
@@ -38,20 +40,20 @@ class OportunidadRepository(
     private val _sync = MutableStateFlow<EstadoSync>(EstadoSync.Inactivo)
     val sync: StateFlow<EstadoSync> = _sync.asStateFlow()
 
-    private val alcance = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    private val alcance = CoroutineScope(SupervisorJob() + io)
 
     private val candado = Mutex()
 
-    suspend fun refrescar() = withContext(Dispatchers.IO) {
+    suspend fun refrescar() = withContext(io) {
         _oportunidades.value = oportunidadDao.listar()
     }
 
-    suspend fun obtener(id: Long): Oportunidad? = withContext(Dispatchers.IO) { oportunidadDao.obtener(id) }
+    suspend fun obtener(id: Long): Oportunidad? = withContext(io) { oportunidadDao.obtener(id) }
 
     suspend fun seguimientos(oportunidadId: Long): List<Seguimiento> =
-        withContext(Dispatchers.IO) { seguimientoDao.listarPorOportunidad(oportunidadId) }
+        withContext(io) { seguimientoDao.listarPorOportunidad(oportunidadId) }
 
-    suspend fun guardar(o: Oportunidad, responsable: String): Long = withContext(Dispatchers.IO) {
+    suspend fun guardar(o: Oportunidad, responsable: String): Long = withContext(io) {
         val ahora = Fechas.marcaTiempo()
         val id = if (o.id == 0L) {
             val nuevoId = oportunidadDao.insertar(o.copy(actualizado = ahora, sincronizado = false))
@@ -76,7 +78,7 @@ class OportunidadRepository(
         guardar(o.copy(estado = nuevoEstado, propuestaEnviada = o.propuestaEnviada || nuevoEstado == "Propuesta enviada"), responsable)
     }
 
-    suspend fun eliminar(o: Oportunidad) = withContext(Dispatchers.IO) {
+    suspend fun eliminar(o: Oportunidad) = withContext(io) {
         o.remoteId?.let { oportunidadDao.agregarEliminacionPendiente(it) }
         oportunidadDao.eliminar(o.id)
         o.fotoRuta?.let { File(it).delete() }
@@ -84,7 +86,7 @@ class OportunidadRepository(
         sincronizarEnSegundoPlano()
     }
 
-    suspend fun agregarSeguimiento(s: Seguimiento) = withContext(Dispatchers.IO) {
+    suspend fun agregarSeguimiento(s: Seguimiento) = withContext(io) {
         val ahora = Fechas.marcaTiempo()
         seguimientoDao.insertar(s.copy(registradoEn = ahora))
         oportunidadDao.obtener(s.oportunidadId)?.let { o ->
@@ -118,7 +120,7 @@ class OportunidadRepository(
         alcance.launch { sincronizar() }
     }
 
-    suspend fun sincronizar(): Boolean = withContext(Dispatchers.IO) {
+    suspend fun sincronizar(): Boolean = withContext(io) {
         candado.withLock {
             _sync.value = EstadoSync.Sincronizando
             try {

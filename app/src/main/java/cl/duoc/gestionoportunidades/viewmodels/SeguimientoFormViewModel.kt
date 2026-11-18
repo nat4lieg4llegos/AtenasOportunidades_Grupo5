@@ -7,6 +7,8 @@ import cl.duoc.gestionoportunidades.data.model.Fechas
 import cl.duoc.gestionoportunidades.data.model.Oportunidad
 import cl.duoc.gestionoportunidades.data.model.Seguimiento
 import cl.duoc.gestionoportunidades.di.AppContainer
+import cl.duoc.gestionoportunidades.repository.AuthRepository
+import cl.duoc.gestionoportunidades.repository.OportunidadRepository
 import cl.duoc.gestionoportunidades.nativo.Recordatorios
 import cl.duoc.gestionoportunidades.validacion.CampoSeguimiento
 import cl.duoc.gestionoportunidades.validacion.SeguimientoFormulario
@@ -28,9 +30,11 @@ data class SeguimientoFormState(
     val mensajeGuardado: String? = null
 )
 
-class SeguimientoFormViewModel(app: Application) : AndroidViewModel(app) {
-    private val repo = AppContainer.oportunidades(app)
-    private val auth = AppContainer.auth(app)
+class SeguimientoFormViewModel @JvmOverloads constructor(
+    app: Application,
+    private val repo: OportunidadRepository = AppContainer.oportunidades(app),
+    private val auth: AuthRepository = AppContainer.auth(app)
+) : AndroidViewModel(app) {
 
     private val _estado = MutableStateFlow(SeguimientoFormState())
     val estado: StateFlow<SeguimientoFormState> = _estado.asStateFlow()

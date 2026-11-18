@@ -7,7 +7,9 @@ import cl.duoc.gestionoportunidades.data.model.Fechas
 import cl.duoc.gestionoportunidades.data.model.Oportunidad
 import cl.duoc.gestionoportunidades.data.model.Usuario
 import cl.duoc.gestionoportunidades.di.AppContainer
+import cl.duoc.gestionoportunidades.repository.AuthRepository
 import cl.duoc.gestionoportunidades.repository.EstadoSync
+import cl.duoc.gestionoportunidades.repository.OportunidadRepository
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 import kotlinx.coroutines.flow.SharingStarted
@@ -31,9 +33,11 @@ data class InicioUiState(
     val sync: EstadoSync = EstadoSync.Inactivo
 )
 
-class InicioViewModel(app: Application) : AndroidViewModel(app) {
-    private val repo = AppContainer.oportunidades(app)
-    private val auth = AppContainer.auth(app)
+class InicioViewModel @JvmOverloads constructor(
+    app: Application,
+    private val repo: OportunidadRepository = AppContainer.oportunidades(app),
+    private val auth: AuthRepository = AppContainer.auth(app)
+) : AndroidViewModel(app) {
 
     val estado: StateFlow<InicioUiState> = combine(repo.oportunidades, repo.sync) { lista, sync ->
         construirEstado(lista, LocalDate.now()).copy(sync = sync)

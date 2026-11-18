@@ -13,8 +13,8 @@ android {
         applicationId = "cl.duoc.gestionoportunidades"
         minSdk = 26
         targetSdk = 37
-        versionCode = 3
-        versionName = "3.0-EP3"
+        versionCode = 4
+        versionName = "4.0-EP4"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -33,6 +33,14 @@ android {
     buildFeatures {
         compose = true
     }
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
+}
+
+tasks.withType<Test>().configureEach {
+    jvmArgs("-XX:+EnableDynamicAgentLoading")
+    systemProperty("net.bytebuddy.experimental", "true")
 }
 
 dependencies {
@@ -52,6 +60,8 @@ dependencies {
     implementation(libs.retrofit.converter.gson)
     implementation(libs.okhttp.logging)
     testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     androidTestImplementation(libs.androidx.espresso.core)

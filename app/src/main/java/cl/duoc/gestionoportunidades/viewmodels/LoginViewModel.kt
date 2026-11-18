@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import cl.duoc.gestionoportunidades.di.AppContainer
+import cl.duoc.gestionoportunidades.repository.AuthRepository
 import cl.duoc.gestionoportunidades.validacion.CampoLogin
 import cl.duoc.gestionoportunidades.validacion.ValidadorLogin
 import kotlinx.coroutines.delay
@@ -24,8 +25,10 @@ data class LoginUiState(
     val autenticado: Boolean = false
 )
 
-class LoginViewModel(app: Application) : AndroidViewModel(app) {
-    private val auth = AppContainer.auth(app)
+class LoginViewModel @JvmOverloads constructor(
+    app: Application,
+    private val auth: AuthRepository = AppContainer.auth(app)
+) : AndroidViewModel(app) {
 
     private val _estado = MutableStateFlow(LoginUiState())
     val estado: StateFlow<LoginUiState> = _estado.asStateFlow()
