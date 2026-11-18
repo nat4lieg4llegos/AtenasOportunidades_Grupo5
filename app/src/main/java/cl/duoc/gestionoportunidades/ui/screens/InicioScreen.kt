@@ -69,6 +69,7 @@ fun InicioScreen(
     alVerLista: () -> Unit,
     alNueva: () -> Unit,
     alAbrir: (Long) -> Unit,
+    alVerFeriados: () -> Unit,
     alCerrarSesion: () -> Unit,
     vm: InicioViewModel = viewModel()
 ) {
@@ -137,6 +138,13 @@ fun InicioScreen(
                     Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)
                     Spacer(Modifier.width(8.dp))
                     Text("Consultar y filtrar oportunidades")
+                }
+            }
+            item {
+                OutlinedButton(onClick = alVerFeriados, modifier = Modifier.fillMaxWidth()) {
+                    Icon(Icons.Filled.DateRange, contentDescription = null)
+                    Spacer(Modifier.width(8.dp))
+                    Text("Feriados en Chile (API externa)")
                 }
             }
             item {

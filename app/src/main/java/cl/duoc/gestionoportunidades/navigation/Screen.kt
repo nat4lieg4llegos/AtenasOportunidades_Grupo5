@@ -9,6 +9,8 @@ sealed class Screen(val route: String) {
 
     data object Lista : Screen("lista")
 
+    data object Feriados : Screen("feriados")
+
     data class Formulario(val id: Long = 0L) : Screen(RUTA_FORMULARIO) {
         override fun buildRoute(): String = route.replace("{$ARG_ID}", id.toString())
     }

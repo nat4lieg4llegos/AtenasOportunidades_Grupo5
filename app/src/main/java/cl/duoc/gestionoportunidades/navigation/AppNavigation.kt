@@ -16,6 +16,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import cl.duoc.gestionoportunidades.ui.screens.DetalleScreen
+import cl.duoc.gestionoportunidades.ui.screens.FeriadosScreen
 import cl.duoc.gestionoportunidades.ui.screens.InicioScreen
 import cl.duoc.gestionoportunidades.ui.screens.ListaScreen
 import cl.duoc.gestionoportunidades.ui.screens.LoginScreen
@@ -61,8 +62,12 @@ fun AppNavigation(
                 alVerLista = { viewModel.navigateTo(Screen.Lista) },
                 alNueva = { viewModel.navigateTo(Screen.Formulario()) },
                 alAbrir = { viewModel.navigateTo(Screen.Detalle(it)) },
+                alVerFeriados = { viewModel.navigateTo(Screen.Feriados) },
                 alCerrarSesion = { viewModel.navigateTo(Screen.Login, popUpTo = Screen.Inicio, inclusive = true) }
             )
+        }
+        composable(Screen.Feriados.route) {
+            FeriadosScreen(alVolver = { viewModel.navigateUp() })
         }
         composable(Screen.Lista.route) {
             ListaScreen(

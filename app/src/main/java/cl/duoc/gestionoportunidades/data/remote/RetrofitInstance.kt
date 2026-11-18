@@ -8,6 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitInstance {
     const val BASE_URL = "http://10.0.2.2:8080/"
+    const val URL_FERIADOS = "https://date.nager.at/"
 
     private val log = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
 
@@ -24,5 +25,14 @@ object RetrofitInstance {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(OportunidadApiService::class.java)
+    }
+
+    val feriadosApi: FeriadosApiService by lazy {
+        Retrofit.Builder()
+            .baseUrl(URL_FERIADOS)
+            .client(cliente)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(FeriadosApiService::class.java)
     }
 }
