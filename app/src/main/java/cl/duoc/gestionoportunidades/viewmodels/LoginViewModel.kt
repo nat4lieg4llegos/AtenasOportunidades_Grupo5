@@ -49,7 +49,7 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
         }
         viewModelScope.launch {
             _estado.update { it.copy(cargando = true, errorGeneral = null) }
-            delay(600) // simula la latencia de un servicio para mostrar el indicador de carga
+            delay(600)
             val usuario = auth.iniciarSesion(actual.usuario, actual.contrasena)
             _estado.update {
                 if (usuario != null) {

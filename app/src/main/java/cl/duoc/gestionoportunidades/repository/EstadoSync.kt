@@ -1,6 +1,5 @@
 package cl.duoc.gestionoportunidades.repository
 
-/** Estado de la conexión con el microservicio REST, para mostrarlo en el panel de inicio. */
 sealed interface EstadoSync {
     data object Inactivo : EstadoSync
     data object Sincronizando : EstadoSync

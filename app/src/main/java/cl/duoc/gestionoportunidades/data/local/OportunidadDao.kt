@@ -5,9 +5,7 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import cl.duoc.gestionoportunidades.data.model.Oportunidad
 
-/** Acceso a la tabla de oportunidades (consultas SQL parametrizadas para evitar inyección). */
 class OportunidadDao(private val helper: AtenasDbHelper) {
-
     fun listar(): List<Oportunidad> =
         helper.readableDatabase.query(
             Tablas.OPORTUNIDADES, null, null, null, null, null, "fecha_evento ASC, id DESC"
@@ -25,20 +23,16 @@ class OportunidadDao(private val helper: AtenasDbHelper) {
 
     fun eliminar(id: Long): Int = helper.writableDatabase.delete(Tablas.OPORTUNIDADES, "id = ?", arrayOf(id.toString()))
 
-    // ---- Sincronización con el microservicio (EP3) ----
-
     fun obtenerPorRemoteId(remoteId: Long): Oportunidad? =
         helper.readableDatabase.query(
             Tablas.OPORTUNIDADES, null, "remote_id = ?", arrayOf(remoteId.toString()), null, null, null
         ).use { c -> if (c.moveToFirst()) c.aOportunidad() else null }
 
-    /** Oportunidades con cambios locales que todavía no llegan al servidor. */
     fun listarPendientes(): List<Oportunidad> =
         helper.readableDatabase.query(
             Tablas.OPORTUNIDADES, null, "sincronizado = 0", null, null, null, "id ASC"
         ).use { c -> buildList { while (c.moveToNext()) add(c.aOportunidad()) } }
 
-    /** Guarda el id que asignó el servidor e indica si la fila quedó igual que en el servidor. */
     fun marcarSincronizada(id: Long, remoteId: Long, sincronizado: Boolean): Int =
         helper.writableDatabase.update(
             Tablas.OPORTUNIDADES,
@@ -46,7 +40,6 @@ class OportunidadDao(private val helper: AtenasDbHelper) {
             "id = ?", arrayOf(id.toString())
         )
 
-    /** Vuelve a dejar la fila como "nunca subida" (por ejemplo, si el servidor ya no la tiene). */
     fun desvincular(id: Long): Int =
         helper.writableDatabase.update(
             Tablas.OPORTUNIDADES,

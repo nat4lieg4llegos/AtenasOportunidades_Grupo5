@@ -8,10 +8,6 @@ import java.io.FileOutputStream
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-/**
- * Recurso nativo: cámara. La foto (afiche, stand o material del evento) se recibe desde la
- * app de cámara del sistema y se guarda en el almacenamiento interno y privado de la app.
- */
 object FotoHelper {
     suspend fun guardar(context: Context, bitmap: Bitmap): String? = withContext(Dispatchers.IO) {
         try {
@@ -28,7 +24,6 @@ object FotoHelper {
         if (ruta == null || !File(ruta).exists()) null else BitmapFactory.decodeFile(ruta)
     }
 
-    /** Borra una foto tomada que finalmente no se guardó con la oportunidad. */
     fun descartar(ruta: String?) {
         ruta?.let { File(it).delete() }
     }

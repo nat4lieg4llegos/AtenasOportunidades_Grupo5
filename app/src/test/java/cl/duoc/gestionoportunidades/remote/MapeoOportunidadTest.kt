@@ -10,9 +10,7 @@ import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-/** Pruebas de la conversión entre el modelo de la app y el JSON del microservicio. */
 class MapeoOportunidadTest {
-
     private fun oportunidad(id: Long = 7, remoteId: Long? = null) = Oportunidad(
         id = id, nombre = "Feria de beneficios", organizacion = "Empresa Horizonte Ficticia",
         tipo = "Feria empresarial", descripcion = "", fuente = "Sitio web",
@@ -46,7 +44,7 @@ class MapeoOportunidadTest {
         assertEquals(3L, o.id)
         assertEquals(15L, o.remoteId)
         assertTrue(o.sincronizado)
-        assertEquals("/data/fotos/evento.jpg", o.fotoRuta) // la foto local se conserva
+        assertEquals("/data/fotos/evento.jpg", o.fotoRuta)
     }
 
     @Test

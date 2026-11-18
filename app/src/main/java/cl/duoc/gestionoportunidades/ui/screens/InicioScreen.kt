@@ -154,7 +154,6 @@ fun InicioScreen(
                 }
             }
             items(estado.alertas, key = { "${it.oportunidadId}-${it.tipo}" }) { alerta ->
-                // Cada alerta entra deslizándose desde la derecha.
                 val entrada = remember { MutableTransitionState(false).apply { targetState = true } }
                 AnimatedVisibility(
                     visibleState = entrada,
@@ -181,7 +180,6 @@ fun InicioScreen(
     }
 }
 
-/** Estado de la conexión con el microservicio. El cambio de estado se anima con AnimatedContent. */
 @Composable
 private fun TarjetaServidor(sync: EstadoSync, alSincronizar: () -> Unit) {
     Card(modifier = Modifier.fillMaxWidth()) {

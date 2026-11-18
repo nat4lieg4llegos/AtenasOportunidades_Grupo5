@@ -62,7 +62,6 @@ fun LoginScreen(alIngresar: () -> Unit, vm: LoginViewModel = viewModel()) {
 
     LaunchedEffect(estado.autenticado) { if (estado.autenticado) alIngresar() }
 
-    // Animación de "sacudida" del formulario cada vez que falla un intento.
     val sacudida = remember { Animatable(0f) }
     LaunchedEffect(estado.intentosFallidos) {
         if (estado.intentosFallidos > 0) {
@@ -71,7 +70,6 @@ fun LoginScreen(alIngresar: () -> Unit, vm: LoginViewModel = viewModel()) {
             }
         }
     }
-    // Entrada animada de la tarjeta al abrir la pantalla.
     var visible by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) { visible = true }
 

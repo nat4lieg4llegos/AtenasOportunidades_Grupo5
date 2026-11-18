@@ -105,7 +105,6 @@ fun ListaScreen(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
             )
 
-            // Filtros rápidos por estado
             LazyRow(
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -122,7 +121,6 @@ fun ListaScreen(
                 }
             }
 
-            // Panel de filtros avanzados (se expande con animación)
             AnimatedVisibility(
                 visible = mostrarFiltros,
                 enter = expandVertically() + fadeIn(),

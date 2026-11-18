@@ -3,9 +3,7 @@ package cl.duoc.gestionoportunidades.data.local
 import android.content.ContentValues
 import cl.duoc.gestionoportunidades.data.model.Seguimiento
 
-/** Acceso a la tabla de seguimientos (historial de gestión de cada oportunidad). */
 class SeguimientoDao(private val helper: AtenasDbHelper) {
-
     fun listarPorOportunidad(oportunidadId: Long): List<Seguimiento> =
         helper.readableDatabase.query(
             Tablas.SEGUIMIENTOS, null, "oportunidad_id = ?", arrayOf(oportunidadId.toString()),

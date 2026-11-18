@@ -11,7 +11,6 @@ enum class CampoOportunidad {
     CONDICIONES, COSTO, OBSERVACIONES, DATOS_FICTICIOS
 }
 
-/** Datos tal como los escribe el usuario en el formulario (todo texto, antes de convertir). */
 data class OportunidadFormulario(
     val nombre: String = "",
     val organizacion: String = "",
@@ -41,10 +40,6 @@ data class OportunidadFormulario(
     val datosFicticios: Boolean = false
 )
 
-/**
- * Reglas de negocio del formulario de oportunidad. No conoce la interfaz:
- * recibe datos y devuelve un mensaje por campo con error.
- */
 object ValidadorOportunidad {
     const val MAX_PUBLICO = 1_000_000
     const val MAX_DESCRIPCION = 300
@@ -52,7 +47,6 @@ object ValidadorOportunidad {
     fun validar(f: OportunidadFormulario, hoy: LocalDate = LocalDate.now()): ResultadoValidacion<CampoOportunidad> {
         val e = mutableMapOf<CampoOportunidad, String>()
 
-        // Datos de la oportunidad
         when {
             f.nombre.isBlank() -> e[CampoOportunidad.NOMBRE] = "Ingresa el nombre de la oportunidad"
             f.nombre.trim().length < 3 -> e[CampoOportunidad.NOMBRE] = "Debe tener al menos 3 caracteres"
@@ -68,7 +62,6 @@ object ValidadorOportunidad {
         }
         if (f.fuente !in Catalogos.FUENTES) e[CampoOportunidad.FUENTE] = "Selecciona dónde se detectó"
 
-        // Fechas: detección no futura; el evento no puede ocurrir antes de ser detectado.
         val deteccion = Fechas.desdeUi(f.fechaDeteccion)
         when {
             f.fechaDeteccion.isBlank() -> e[CampoOportunidad.FECHA_DETECCION] = "Ingresa la fecha de detección"
@@ -87,14 +80,12 @@ object ValidadorOportunidad {
             e[CampoOportunidad.HORARIO] = "Usa HH:MM - HH:MM (inicio antes del término)"
         }
 
-        // Ubicación general (el caso pide comuna/región, no direcciones particulares)
         when {
             f.comuna.isBlank() -> e[CampoOportunidad.COMUNA] = "Ingresa la comuna"
             f.comuna.trim().length < 3 -> e[CampoOportunidad.COMUNA] = "Comuna demasiado corta"
         }
         if (f.region !in Catalogos.REGIONES) e[CampoOportunidad.REGION] = "Selecciona la región"
 
-        // Público
         val publico = f.publicoEsperado.trim().toIntOrNull()
         when {
             f.publicoEsperado.isBlank() -> e[CampoOportunidad.PUBLICO_ESPERADO] = "Indica el público esperado"
@@ -103,7 +94,6 @@ object ValidadorOportunidad {
             publico > MAX_PUBLICO -> e[CampoOportunidad.PUBLICO_ESPERADO] = "Valor demasiado alto (máx. 1.000.000)"
         }
 
-        // Gestión
         if (f.prioridad !in Catalogos.PRIORIDADES) e[CampoOportunidad.PRIORIDAD] = "Selecciona la prioridad"
         if (f.potencial !in Catalogos.POTENCIALES) e[CampoOportunidad.POTENCIAL] = "Selecciona el potencial"
         if (f.estado !in Catalogos.ESTADOS) e[CampoOportunidad.ESTADO] = "Selecciona el estado"
@@ -112,7 +102,6 @@ object ValidadorOportunidad {
             !Reglas.nombrePersonaValido(f.responsable) -> e[CampoOportunidad.RESPONSABLE] = "Usa solo letras"
         }
 
-        // Contacto ficticio: opcional, pero si se ingresa debe ser coherente.
         val hayContacto = f.contactoNombre.isNotBlank() || f.contactoCorreo.isNotBlank() || f.contactoTelefono.isNotBlank()
         if (hayContacto) {
             when {
@@ -136,7 +125,6 @@ object ValidadorOportunidad {
             e.putIfAbsent(CampoOportunidad.CONTACTO_NOMBRE, "Este estado requiere registrar el contacto")
         }
 
-        // Condiciones
         val costo = f.costo.trim().toLongOrNull()
         if (f.costo.isNotBlank()) {
             when {

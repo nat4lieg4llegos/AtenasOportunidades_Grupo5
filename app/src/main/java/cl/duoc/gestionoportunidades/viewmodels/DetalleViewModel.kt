@@ -30,7 +30,6 @@ class DetalleViewModel(app: Application) : AndroidViewModel(app) {
     val estado: StateFlow<DetalleUiState> = _estado.asStateFlow()
     private var observacion: Job? = null
 
-    /** Observa el repositorio: si se edita la oportunidad o se agrega un seguimiento, la ficha se actualiza sola. */
     fun cargar(id: Long) {
         if (observacion != null) return
         observacion = viewModelScope.launch {
@@ -59,7 +58,6 @@ class DetalleViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    /** Programa una notificación de prueba en 10 segundos (para demostrar el recurso nativo). */
     fun probarRecordatorio() {
         val o = _estado.value.oportunidad ?: return
         val app = getApplication<Application>()

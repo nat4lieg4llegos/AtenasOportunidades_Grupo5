@@ -111,7 +111,6 @@ fun DetalleScreen(
 
     LaunchedEffect(estado.eliminada) { if (estado.eliminada) alVolver() }
     LaunchedEffect(estado.mensaje) { estado.mensaje?.let { snackbar.showSnackbar(it); vm.mensajeMostrado() } }
-    // Mensajes que envían otras pantallas al volver (p. ej. "Seguimiento registrado").
     val alcance = rememberCoroutineScope()
     LaunchedEffect(mensajeExterno) {
         mensajeExterno?.let { m ->
@@ -120,7 +119,6 @@ fun DetalleScreen(
         }
     }
 
-    // Permiso de notificaciones (Android 13+), pedido justo cuando se quiere programar un recordatorio.
     val permisoNotificaciones = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { ok ->
         if (ok) vm.probarRecordatorio() else vm.permisoNotificacionDenegado()
     }

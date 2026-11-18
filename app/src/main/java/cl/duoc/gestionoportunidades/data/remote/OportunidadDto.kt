@@ -1,10 +1,5 @@
 package cl.duoc.gestionoportunidades.data.remote
 
-/**
- * Forma del JSON que envía y recibe el microservicio (/api/oportunidades).
- * Todos los campos son opcionales (?) porque Gson los deja en null si el servidor no los manda;
- * así la app nunca se cae por un dato faltante. Las fechas viajan como texto AAAA-MM-DD.
- */
 data class OportunidadDto(
     val id: Long? = null,
     val nombre: String? = null,

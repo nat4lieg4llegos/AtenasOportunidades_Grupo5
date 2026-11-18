@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Conexión con el microservicio REST (EP3). -->
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <!-- Recurso nativo 1: ubicación aproximada, opcional y solo bajo demanda (sin seguimiento continuo). -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <!-- Recurso nativo 3: notificaciones locales de recordatorio (Android 13+ requiere permiso). -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
-    <!-- Recurso nativo 2: la cámara se usa mediante la app de cámara del sistema (no requiere permiso CAMERA). -->
     <uses-feature
         android:name="android.hardware.camera.any"
         android:required="false" />

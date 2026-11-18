@@ -35,10 +35,6 @@ data class OportunidadFormState(
     val mensaje: String? = null
 )
 
-/**
- * Lógica del formulario de oportunidad. La pantalla solo envía eventos (cambios de campo,
- * guardar, ubicación, foto) y dibuja el estado; las reglas viven en [ValidadorOportunidad].
- */
 class OportunidadFormViewModel(app: Application) : AndroidViewModel(app) {
     private val repo = AppContainer.oportunidades(app)
     private val auth = AppContainer.auth(app)
@@ -52,7 +48,7 @@ class OportunidadFormViewModel(app: Application) : AndroidViewModel(app) {
     private var validarEnVivo = false
 
     fun cargar(id: Long) {
-        if (idCargado == id) return // evita recargar al rotar la pantalla
+        if (idCargado == id) return
         idCargado = id
         if (id == 0L) {
             _estado.value = OportunidadFormState(
@@ -111,10 +107,6 @@ class OportunidadFormViewModel(app: Application) : AndroidViewModel(app) {
     fun onDatosFicticios(v: Boolean) =
         actualizarFormulario(_estado.value.form.copy(datosFicticios = v), CampoOportunidad.DATOS_FICTICIOS)
 
-    /**
-     * Antes del primer intento de guardar solo se limpia el error del campo editado;
-     * después se revalida todo en vivo, para que el usuario vea cómo desaparecen los errores.
-     */
     private fun actualizarFormulario(nuevo: OportunidadFormulario, campo: CampoOportunidad?) {
         _estado.update {
             val errores = when {
@@ -149,7 +141,6 @@ class OportunidadFormViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    // ---- Recurso nativo: ubicación ----
     fun usarUbicacion() {
         viewModelScope.launch {
             _estado.update { it.copy(buscandoUbicacion = true, mensajeUbicacion = "Buscando ubicación aproximada…") }
@@ -188,7 +179,6 @@ class OportunidadFormViewModel(app: Application) : AndroidViewModel(app) {
         it.copy(mensajeUbicacion = "Permiso denegado. La ubicación es opcional: ingresa la comuna manualmente.")
     }
 
-    // ---- Recurso nativo: cámara ----
     fun onFotoTomada(bitmap: Bitmap) {
         viewModelScope.launch {
             val ruta = FotoHelper.guardar(getApplication(), bitmap)
@@ -209,14 +199,12 @@ class OportunidadFormViewModel(app: Application) : AndroidViewModel(app) {
     fun mostrarMensaje(texto: String) = _estado.update { it.copy(mensaje = texto) }
     fun mensajeMostrado() = _estado.update { it.copy(mensaje = null) }
 
-    /** Borra la foto nueva si no es la que ya estaba guardada en la base de datos. */
     private fun descartarFotoTemporal() {
         val ruta = _estado.value.fotoRuta
         if (ruta != null && ruta != original?.fotoRuta) FotoHelper.descartar(ruta)
     }
 
     override fun onCleared() {
-        // Si se sale sin guardar, no deja fotos huérfanas en el almacenamiento.
         if (_estado.value.guardadoId == null) descartarFotoTemporal()
         super.onCleared()
     }
@@ -233,7 +221,6 @@ private fun Oportunidad.aFormulario() = OportunidadFormulario(
     observaciones = observaciones, datosFicticios = true
 )
 
-/** Solo se llama con un formulario ya validado, por eso las conversiones no fallan. */
 private fun OportunidadFormulario.aOportunidad(original: Oportunidad?, fotoRuta: String?) = Oportunidad(
     id = original?.id ?: 0L,
     nombre = nombre.trim(), organizacion = organizacion.trim(), tipo = tipo, descripcion = descripcion.trim(),

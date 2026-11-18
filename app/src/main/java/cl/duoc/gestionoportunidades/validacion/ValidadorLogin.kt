@@ -2,7 +2,6 @@ package cl.duoc.gestionoportunidades.validacion
 
 enum class CampoLogin { USUARIO, CONTRASENA }
 
-/** Valida el formato de las credenciales antes de consultar al repositorio de autenticación. */
 object ValidadorLogin {
     private val USUARIO = Regex("^[a-zA-Z0-9._]+$")
 

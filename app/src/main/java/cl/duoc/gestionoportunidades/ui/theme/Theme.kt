@@ -41,10 +41,6 @@ private val EsquemaOscuro = darkColorScheme(
     surface = SuperficieOscura
 )
 
-/**
- * Tema Material 3 de la app. El color dinámico (Android 12+) se desactiva a propósito
- * para que la identidad visual de Agencia Atenas sea la misma en todos los dispositivos.
- */
 @Composable
 fun GestionOportunidadesTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),

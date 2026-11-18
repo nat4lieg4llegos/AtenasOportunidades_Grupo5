@@ -115,7 +115,6 @@ fun OportunidadFormScreen(
     LaunchedEffect(estado.mensaje) {
         estado.mensaje?.let { snackbar.showSnackbar(it); vm.mensajeMostrado() }
     }
-    // Tras un intento fallido, sube al inicio donde está el resumen de errores.
     LaunchedEffect(estado.intentosFallidos) { if (estado.intentosFallidos > 0) scroll.animateScrollTo(0) }
 
     val volver: () -> Unit = {
@@ -127,11 +126,9 @@ fun OportunidadFormScreen(
     }
     BackHandler(onBack = volver)
 
-    // Permiso de ubicación: se pide en contexto, solo cuando el usuario toca el botón.
     val permisoUbicacion = rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { r ->
         if (r.values.any { it }) vm.usarUbicacion() else vm.permisoUbicacionDenegado()
     }
-    // Cámara: se usa la app de cámara del sistema y se recibe una vista previa (Bitmap).
     val camara = rememberLauncherForActivityResult(ActivityResultContracts.TakePicturePreview()) { bitmap: Bitmap? ->
         if (bitmap != null) vm.onFotoTomada(bitmap) else vm.mostrarMensaje("No se tomó ninguna foto")
     }
@@ -273,7 +270,6 @@ fun OportunidadFormScreen(
     }
 }
 
-/** Tarjeta que resume cuántos campos tienen error; aparece y desaparece con animación. */
 @Composable
 private fun ResumenErrores(cantidad: Int) {
     AnimatedVisibility(visible = cantidad > 0, enter = expandVertically() + fadeIn(), exit = shrinkVertically() + fadeOut()) {

@@ -34,7 +34,6 @@ import cl.duoc.gestionoportunidades.ui.theme.EstadoAlerta
 import cl.duoc.gestionoportunidades.ui.theme.EstadoExito
 import cl.duoc.gestionoportunidades.ui.theme.EstadoNeutro
 
-/** Etiqueta de estado: siempre combina color + ícono + texto (accesible, no depende solo del color). */
 @Composable
 fun EtiquetaEstado(estado: String, modifier: Modifier = Modifier) {
     val (color, icono) = estiloEstado(estado)
@@ -61,7 +60,6 @@ fun estiloEstado(estado: String): Pair<Color, ImageVector> = when (estado) {
     else -> EstadoNeutro to Icons.Filled.Info
 }
 
-/** Etiqueta de prioridad con estrella; la prioridad alta usa el color terciario de la marca. */
 @Composable
 fun EtiquetaPrioridad(prioridad: String) {
     val color = when (prioridad) {
@@ -75,7 +73,6 @@ fun EtiquetaPrioridad(prioridad: String) {
     }
 }
 
-/** Indicador numérico del panel; el número se anima al cambiar. */
 @Composable
 fun TarjetaIndicador(titulo: String, valor: Int, icono: ImageVector, color: Color, modifier: Modifier = Modifier) {
     val animado by animateIntAsState(targetValue = valor, animationSpec = tween(600), label = "indicador")
@@ -92,7 +89,6 @@ fun TarjetaIndicador(titulo: String, valor: Int, icono: ImageVector, color: Colo
     }
 }
 
-/** Título de sección dentro de formularios y fichas. */
 @Composable
 fun TituloSeccion(texto: String, icono: ImageVector, modifier: Modifier = Modifier) {
     Column(modifier.fillMaxWidth().padding(top = 8.dp)) {
@@ -107,7 +103,6 @@ fun TituloSeccion(texto: String, icono: ImageVector, modifier: Modifier = Modifi
     }
 }
 
-/** Fila "etiqueta: valor" de la ficha de detalle. Oculta la fila si no hay valor. */
 @Composable
 fun FilaDato(etiqueta: String, valor: String?) {
     if (valor.isNullOrBlank()) return

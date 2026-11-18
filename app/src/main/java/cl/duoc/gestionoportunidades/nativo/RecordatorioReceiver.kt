@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 
-/** Recibe la alarma programada y publica la notificación de recordatorio. */
 class RecordatorioReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         Recordatorios.mostrar(

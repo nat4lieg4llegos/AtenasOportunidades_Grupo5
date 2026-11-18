@@ -12,13 +12,8 @@ import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-/**
- * Convierte los errores en respuestas JSON claras, con un mensaje por campo,
- * igual que hace el formulario de la app.
- */
 @RestControllerAdvice
 public class ManejadorErrores {
-
     @ExceptionHandler(RecursoNoEncontradoException.class)
     public ResponseEntity<Map<String, Object>> noEncontrado(RecursoNoEncontradoException e) {
         return respuesta(HttpStatus.NOT_FOUND, e.getMessage(), Map.of());

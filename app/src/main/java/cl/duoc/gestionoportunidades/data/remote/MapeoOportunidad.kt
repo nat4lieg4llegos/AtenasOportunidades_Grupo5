@@ -2,11 +2,6 @@ package cl.duoc.gestionoportunidades.data.remote
 
 import cl.duoc.gestionoportunidades.data.model.Oportunidad
 
-/**
- * Conversión entre el modelo de la app y el JSON del servidor.
- * - El id local (SQLite) y el id del servidor son distintos: el del servidor se guarda en remoteId.
- * - La foto NO viaja al servidor: es un archivo privado del teléfono.
- */
 fun Oportunidad.aDto(): OportunidadDto = OportunidadDto(
     id = remoteId,
     nombre = nombre, organizacion = organizacion, tipo = tipo, descripcion = descripcion, fuente = fuente,
@@ -19,11 +14,6 @@ fun Oportunidad.aDto(): OportunidadDto = OportunidadDto(
     proximoSeguimiento = proximoSeguimiento
 )
 
-/**
- * Crea la versión local de una oportunidad que llegó del servidor.
- * @param idLocal id de la fila en SQLite (0 = fila nueva).
- * @param fotoRuta se conserva la foto local, porque el servidor no la conoce.
- */
 fun OportunidadDto.aOportunidad(idLocal: Long = 0, fotoRuta: String? = null, actualizado: String = ""): Oportunidad = Oportunidad(
     id = idLocal,
     nombre = nombre.orEmpty(), organizacion = organizacion.orEmpty(), tipo = tipo.orEmpty(),

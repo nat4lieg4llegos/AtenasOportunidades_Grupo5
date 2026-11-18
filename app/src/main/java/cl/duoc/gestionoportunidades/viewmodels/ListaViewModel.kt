@@ -35,7 +35,6 @@ data class ListaUiState(
     val cargando: Boolean = true
 )
 
-/** Búsqueda y filtros del caso: por nombre/organización/comuna/responsable, estado, prioridad, tipo, región y fecha. */
 class ListaViewModel(app: Application) : AndroidViewModel(app) {
     private val repo = AppContainer.oportunidades(app)
     private val filtros = MutableStateFlow(Filtros())
@@ -58,7 +57,6 @@ class ListaViewModel(app: Application) : AndroidViewModel(app) {
     fun limpiar() = filtros.update { Filtros(texto = it.texto, orden = it.orden) }
 
     companion object {
-        /** Función pura (sin Android) para poder razonar y probar la lógica de filtrado. */
         fun aplicar(lista: List<Oportunidad>, f: Filtros, hoy: LocalDate): List<Oportunidad> {
             val q = f.texto.trim()
             val filtrada = lista.filter { o ->

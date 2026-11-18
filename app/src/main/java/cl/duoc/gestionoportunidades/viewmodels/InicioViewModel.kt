@@ -28,7 +28,6 @@ data class InicioUiState(
     val confirmadas: Int = 0,
     val alertas: List<Alerta> = emptyList(),
     val cargando: Boolean = true,
-    /** Estado de la conexión con el microservicio REST (EP3). */
     val sync: EstadoSync = EstadoSync.Inactivo
 )
 
@@ -36,19 +35,17 @@ class InicioViewModel(app: Application) : AndroidViewModel(app) {
     private val repo = AppContainer.oportunidades(app)
     private val auth = AppContainer.auth(app)
 
-    /** Combina la lista local con el estado de sincronización en un solo UiState. */
     val estado: StateFlow<InicioUiState> = combine(repo.oportunidades, repo.sync) { lista, sync ->
         construirEstado(lista, LocalDate.now()).copy(sync = sync)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), InicioUiState(usuario = auth.usuarioActual()))
 
     init {
         viewModelScope.launch {
-            repo.refrescar()                  // 1. muestra de inmediato lo guardado en el teléfono
-            repo.sincronizarEnSegundoPlano()  // 2. luego trae y envía cambios al servidor
+            repo.refrescar()
+            repo.sincronizarEnSegundoPlano()
         }
     }
 
-    /** Botón "Sincronizar" del panel. */
     fun sincronizar() = repo.sincronizarEnSegundoPlano()
 
     fun cerrarSesion() = auth.cerrarSesion()

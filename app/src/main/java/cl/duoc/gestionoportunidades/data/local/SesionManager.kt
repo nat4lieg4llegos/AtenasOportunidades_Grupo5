@@ -3,7 +3,6 @@ package cl.duoc.gestionoportunidades.data.local
 import android.content.Context
 import cl.duoc.gestionoportunidades.data.model.Usuario
 
-/** Control de sesión: guarda el usuario ficticio autenticado en SharedPreferences (nunca la contraseña). */
 class SesionManager(context: Context) {
     private val prefs = context.applicationContext.getSharedPreferences("sesion_atenas", Context.MODE_PRIVATE)
 

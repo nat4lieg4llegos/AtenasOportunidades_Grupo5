@@ -11,7 +11,6 @@ android {
 
     defaultConfig {
         applicationId = "cl.duoc.gestionoportunidades"
-        // API 26+ para usar java.time (LocalDate) sin desugaring.
         minSdk = 26
         targetSdk = 37
         versionCode = 3
@@ -49,7 +48,6 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.navigation.compose)
-    // Consumo de la API REST (EP3): Retrofit + conversor JSON Gson + log de peticiones en Logcat
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.gson)
     implementation(libs.okhttp.logging)

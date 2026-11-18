@@ -18,13 +18,6 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-/**
- * Oportunidad de activación corporativa (misma estructura que usa la app móvil).
- * Es a la vez la entidad JPA (tabla "oportunidades") y el cuerpo JSON de la API.
- * Las validaciones se repiten en el servidor: la app valida para dar retroalimentación
- * inmediata y el backend valida porque nunca debe confiar en lo que recibe.
- * La foto no se envía al servidor: queda guardada solo en el teléfono.
- */
 @Entity
 @Table(name = "oportunidades")
 public class Oportunidad {
@@ -107,7 +100,6 @@ public class Oportunidad {
 
     private LocalDateTime actualizadoEn;
 
-    /** Marca de tiempo de la última modificación en el servidor. */
     @PrePersist
     @PreUpdate
     void marcarActualizacion() {

@@ -19,12 +19,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-/** Pruebas de la API completa (controlador + servicio + JPA) sobre una base H2 en memoria. */
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestPropertySource(properties = "spring.datasource.url=jdbc:h2:mem:pruebas;DB_CLOSE_DELAY=-1")
 class OportunidadControllerTest {
-
     @Autowired
     private MockMvc mvc;
 

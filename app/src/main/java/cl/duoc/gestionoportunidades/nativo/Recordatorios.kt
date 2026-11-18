@@ -19,11 +19,6 @@ import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZoneId
 
-/**
- * Recurso nativo: notificaciones locales (avisos internos, como indica el caso).
- * Se programan con AlarmManager (alarma inexacta, no requiere permisos especiales)
- * y se muestran desde [RecordatorioReceiver].
- */
 object Recordatorios {
     const val CANAL_ID = "recordatorios_seguimiento"
     const val EXTRA_ID = "oportunidad_id"
@@ -42,12 +37,10 @@ object Recordatorios {
         }
     }
 
-    /** En Android 13+ las notificaciones requieren permiso en tiempo de ejecución. */
     fun tienePermiso(context: Context): Boolean =
         Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
             ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
 
-    /** Programa el aviso para las 09:00 del día indicado (o en 1 minuto si esa hora ya pasó). */
     fun programarParaFecha(context: Context, oportunidadId: Long, fecha: LocalDate, titulo: String, texto: String) {
         val zona = ZoneId.systemDefault()
         val objetivo = fecha.atTime(HORA_AVISO).atZone(zona).toInstant().toEpochMilli()
@@ -55,7 +48,6 @@ object Recordatorios {
         programar(context, oportunidadId, maxOf(objetivo, minimo), titulo, texto)
     }
 
-    /** Aviso de prueba para la demostración en la defensa. */
     fun programarPrueba(context: Context, oportunidadId: Long, titulo: String, texto: String, segundos: Int = 10) =
         programar(context, oportunidadId, System.currentTimeMillis() + segundos * 1000L, titulo, texto)
 
@@ -73,8 +65,7 @@ object Recordatorios {
         alarmas.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, enMillis, pending)
     }
 
-    /** Construye y publica la notificación. Si no hay permiso, no hace nada (la app sigue funcionando). */
-    @SuppressLint("MissingPermission") // el permiso se verifica con tienePermiso() al inicio
+    @SuppressLint("MissingPermission")
     fun mostrar(context: Context, oportunidadId: Long, titulo: String, texto: String) {
         if (!tienePermiso(context)) return
         crearCanal(context)
@@ -98,7 +89,6 @@ object Recordatorios {
         try {
             NotificationManagerCompat.from(context).notify(oportunidadId.toInt(), notificacion)
         } catch (e: SecurityException) {
-            // El usuario revocó el permiso entre la verificación y la publicación.
         }
     }
 }

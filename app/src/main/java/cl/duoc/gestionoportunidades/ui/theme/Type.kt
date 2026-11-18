@@ -6,7 +6,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
-// Jerarquía tipográfica: títulos firmes para escanear rápido en terreno, cuerpo legible.
 val Typography = Typography(
     headlineMedium = TextStyle(
         fontFamily = FontFamily.Default,

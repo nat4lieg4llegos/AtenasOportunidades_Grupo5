@@ -32,7 +32,6 @@ object ValidadorSeguimiento {
             f.resultado.trim().length > 300 -> e[CampoSeguimiento.RESULTADO] = "Máximo 300 caracteres"
         }
 
-        // Si se programa una próxima acción, debe tener fecha (y viceversa).
         val proxima = Fechas.desdeUi(f.fechaProximo)
         if (f.proximaAccion.isBlank() && f.fechaProximo.isNotBlank()) {
             e[CampoSeguimiento.PROXIMA_ACCION] = "Indica qué acción se hará en esa fecha"

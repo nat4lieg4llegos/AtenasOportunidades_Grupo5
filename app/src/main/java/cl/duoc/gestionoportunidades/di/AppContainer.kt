@@ -9,10 +9,6 @@ import cl.duoc.gestionoportunidades.data.remote.RetrofitInstance
 import cl.duoc.gestionoportunidades.repository.AuthRepository
 import cl.duoc.gestionoportunidades.repository.OportunidadRepository
 
-/**
- * Contenedor de dependencias simple (Service Locator): crea una sola instancia de la base
- * de datos y de los repositorios para toda la app, y los ViewModels los obtienen desde aquí.
- */
 object AppContainer {
     @Volatile private var oportunidadRepo: OportunidadRepository? = null
     @Volatile private var authRepo: AuthRepository? = null

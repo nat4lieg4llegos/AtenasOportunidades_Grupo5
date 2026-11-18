@@ -17,16 +17,9 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 
-/** Comuna y región aproximadas obtenidas a partir de una lectura puntual de ubicación. */
 data class UbicacionAproximada(val comuna: String?, val regionTexto: String?, val latitud: Double, val longitud: Double)
 
-/**
- * Recurso nativo: ubicación. Cumple las restricciones del caso:
- * es opcional, se lee una sola vez a pedido del usuario, no hay seguimiento continuo
- * y no se guardan coordenadas (solo se completa comuna y región del evento).
- */
 class UbicacionHelper(private val context: Context) {
-
     fun tienePermiso(): Boolean =
         ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
             ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
@@ -34,7 +27,6 @@ class UbicacionHelper(private val context: Context) {
     private fun tienePermisoPreciso(): Boolean =
         ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
 
-    /** Devuelve null si no hay permiso, la ubicación está apagada o ningún proveedor responde. */
     suspend fun obtenerUbicacion(): UbicacionAproximada? {
         if (!tienePermiso()) return null
         val ubicacion = leerUbicacion() ?: return null
@@ -47,10 +39,9 @@ class UbicacionHelper(private val context: Context) {
         )
     }
 
-    @SuppressLint("MissingPermission") // el permiso se verifica en tienePermiso()
+    @SuppressLint("MissingPermission")
     private suspend fun leerUbicacion(): Location? {
         val lm = context.getSystemService(LocationManager::class.java) ?: return null
-        // GPS primero: es el que recibe la posición simulada del emulador y el más fiable en terreno.
         val proveedores = buildList {
             if (tienePermisoPreciso()) add(LocationManager.GPS_PROVIDER)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) add(LocationManager.FUSED_PROVIDER)
@@ -59,13 +50,11 @@ class UbicacionHelper(private val context: Context) {
 
         if (proveedores.isEmpty()) return null
 
-        // 1) Última ubicación conocida de los últimos 10 minutos: respuesta inmediata.
         val reciente = proveedores.mapNotNull { p ->
             try { lm.getLastKnownLocation(p) } catch (e: SecurityException) { null }
         }.filter { System.currentTimeMillis() - it.time < 10 * 60_000 }.maxByOrNull { it.time }
         if (reciente != null) return reciente
 
-        // 2) Lectura nueva, con un límite de 6 segundos por proveedor para no quedar esperando a uno solo.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             for (p in proveedores) {
                 val actual = withTimeoutOrNull(6_000) {
@@ -82,7 +71,6 @@ class UbicacionHelper(private val context: Context) {
                 if (actual != null) return actual
             }
         }
-        // 3) Último recurso: cualquier ubicación conocida, aunque sea antigua.
         return proveedores.mapNotNull { p ->
             try { lm.getLastKnownLocation(p) } catch (e: SecurityException) { null }
         }.maxByOrNull { it.time }

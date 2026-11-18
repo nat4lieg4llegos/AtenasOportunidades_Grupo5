@@ -27,16 +27,6 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 
-/**
- * Única fuente de datos para los ViewModels. Expone la lista como StateFlow y la
- * vuelve a emitir después de cada escritura, para que todas las pantallas se actualicen solas.
- *
- * EP3: además de SQLite, se conecta al microservicio REST con Retrofit ("offline first"):
- *  1. Toda escritura se guarda primero en el teléfono (la app funciona sin internet).
- *  2. Luego se sincroniza con el servidor en segundo plano (POST / PUT / DELETE).
- *  3. Al sincronizar también se descargan (GET) las oportunidades creadas desde otros teléfonos.
- * Todo el acceso a SQLite y a la red se ejecuta fuera del hilo principal (Dispatchers.IO).
- */
 class OportunidadRepository(
     private val oportunidadDao: OportunidadDao,
     private val seguimientoDao: SeguimientoDao,
@@ -48,10 +38,8 @@ class OportunidadRepository(
     private val _sync = MutableStateFlow<EstadoSync>(EstadoSync.Inactivo)
     val sync: StateFlow<EstadoSync> = _sync.asStateFlow()
 
-    /** Alcance propio del repositorio: la sincronización sigue aunque el usuario cambie de pantalla. */
     private val alcance = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
-    /** Evita dos sincronizaciones al mismo tiempo (por ejemplo, guardar dos veces seguidas). */
     private val candado = Mutex()
 
     suspend fun refrescar() = withContext(Dispatchers.IO) {
@@ -63,7 +51,6 @@ class OportunidadRepository(
     suspend fun seguimientos(oportunidadId: Long): List<Seguimiento> =
         withContext(Dispatchers.IO) { seguimientoDao.listarPorOportunidad(oportunidadId) }
 
-    /** Inserta o actualiza. Si cambió el estado, lo deja registrado en el historial. Devuelve el id. */
     suspend fun guardar(o: Oportunidad, responsable: String): Long = withContext(Dispatchers.IO) {
         val ahora = Fechas.marcaTiempo()
         val id = if (o.id == 0L) {
@@ -72,7 +59,6 @@ class OportunidadRepository(
             nuevoId
         } else {
             val anterior = oportunidadDao.obtener(o.id)
-            // Se conserva el id del servidor guardado en la base (pudo asignarse mientras el formulario estaba abierto).
             oportunidadDao.actualizar(o.copy(actualizado = ahora, sincronizado = false, remoteId = anterior?.remoteId ?: o.remoteId))
             if (anterior != null && anterior.estado != o.estado) {
                 registrarAccion(o.id, Catalogos.ACCION_CAMBIO_ESTADO, "${anterior.estado} → ${o.estado}", responsable, ahora)
@@ -91,15 +77,13 @@ class OportunidadRepository(
     }
 
     suspend fun eliminar(o: Oportunidad) = withContext(Dispatchers.IO) {
-        // Si ya estaba en el servidor, se anota para borrarla allá también (aunque ahora no haya internet).
         o.remoteId?.let { oportunidadDao.agregarEliminacionPendiente(it) }
-        oportunidadDao.eliminar(o.id) // los seguimientos se borran en cascada
+        oportunidadDao.eliminar(o.id)
         o.fotoRuta?.let { File(it).delete() }
         _oportunidades.value = oportunidadDao.listar()
         sincronizarEnSegundoPlano()
     }
 
-    /** Registra un seguimiento y actualiza la fecha del próximo seguimiento de la oportunidad. */
     suspend fun agregarSeguimiento(s: Seguimiento) = withContext(Dispatchers.IO) {
         val ahora = Fechas.marcaTiempo()
         seguimientoDao.insertar(s.copy(registradoEn = ahora))
@@ -130,36 +114,25 @@ class OportunidadRepository(
         sincronizarEnSegundoPlano()
     }
 
-    // ---------------------------------------------------------------------------------------
-    // Sincronización con el microservicio REST (Retrofit)
-    // ---------------------------------------------------------------------------------------
-
     fun sincronizarEnSegundoPlano() {
         alcance.launch { sincronizar() }
     }
 
-    /**
-     * Sincroniza en 4 pasos y devuelve true si terminó bien. Si no hay conexión, no se pierde nada:
-     * los cambios quedan marcados como pendientes y se envían en la próxima sincronización.
-     */
     suspend fun sincronizar(): Boolean = withContext(Dispatchers.IO) {
         candado.withLock {
             _sync.value = EstadoSync.Sincronizando
             try {
-                // 1) DELETE: oportunidades borradas en el teléfono que siguen en el servidor.
                 for (remoteId in oportunidadDao.listarEliminacionesPendientes()) {
                     val respuesta = api.eliminar(remoteId)
                     if (!respuesta.isSuccessful && respuesta.code() != 404) throw HttpException(respuesta)
-                    oportunidadDao.quitarEliminacionPendiente(remoteId) // 404 = ya no existía: listo igual
+                    oportunidadDao.quitarEliminacionPendiente(remoteId)
                 }
 
-                // 2) POST / PUT: cambios locales pendientes.
                 var rechazadas = 0
                 for (o in oportunidadDao.listarPendientes()) {
                     if (!subir(o)) rechazadas++
                 }
 
-                // 3) GET: traer lo que hay en el servidor (incluye lo creado desde otros teléfonos).
                 val remotas = api.listar()
                 val idsRemotos = remotas.mapNotNull { it.id }.toSet()
                 val ahora = Fechas.marcaTiempo()
@@ -171,15 +144,12 @@ class OportunidadRepository(
                             val nuevoId = oportunidadDao.insertar(dto.aOportunidad(actualizado = ahora))
                             registrarAccion(nuevoId, "Investigación inicial", "Oportunidad recibida desde el servidor.", dto.responsable.orEmpty(), ahora)
                         }
-                        // Solo se sobrescribe si no hay cambios locales sin enviar.
                         local.sincronizado -> oportunidadDao.actualizar(
                             dto.aOportunidad(idLocal = local.id, fotoRuta = local.fotoRuta, actualizado = ahora)
                         )
                     }
                 }
 
-                // 4) Si una oportunidad sincronizada ya no está en el servidor, se vuelve a subir
-                //    (preferimos no borrar datos del teléfono por un problema del servidor).
                 oportunidadDao.listar()
                     .filter { it.sincronizado && it.remoteId != null && it.remoteId !in idsRemotos }
                     .forEach { o ->
@@ -206,23 +176,18 @@ class OportunidadRepository(
         }
     }
 
-    /**
-     * Envía una oportunidad: POST si nunca se subió, PUT si ya tiene id del servidor.
-     * Devuelve false si el servidor la rechazó por datos inválidos (400); los errores de red se propagan.
-     */
     private suspend fun subir(o: Oportunidad): Boolean {
         val dto = o.aDto()
         val remota = try {
             if (o.remoteId == null) api.crear(dto) else api.actualizar(o.remoteId, dto)
         } catch (e: HttpException) {
             when (e.code()) {
-                404 -> api.crear(dto.copy(id = null)) // la borraron en el servidor: se crea de nuevo
-                400 -> return false                   // datos rechazados por el servidor
+                404 -> api.crear(dto.copy(id = null))
+                400 -> return false
                 else -> throw e
             }
         }
         val remoteId = remota.id ?: return true
-        // Si el usuario la editó otra vez mientras se enviaba, queda pendiente para la próxima vuelta.
         val sinCambiosNuevos = oportunidadDao.obtener(o.id)?.aDto()?.copy(id = null) == dto.copy(id = null)
         oportunidadDao.marcarSincronizada(o.id, remoteId, sinCambiosNuevos)
         return true

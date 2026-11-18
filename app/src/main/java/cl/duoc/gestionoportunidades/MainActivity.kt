@@ -16,7 +16,6 @@ class MainActivity : ComponentActivity() {
         Recordatorios.crearCanal(this)
 
         val haySesion = AppContainer.auth(this).usuarioActual() != null
-        // Si la app se abrió desde una notificación, llega el id de la oportunidad.
         val oportunidadDesdeNotificacion = intent.getLongExtra(Recordatorios.EXTRA_ID, 0L)
             .takeIf { it > 0 && savedInstanceState == null }
 

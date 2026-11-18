@@ -17,18 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-/**
- * Endpoints REST que consume la app con Retrofit.
- *   GET    /api/oportunidades          -> lista (opcional ?estado=...)
- *   GET    /api/oportunidades/{id}     -> una oportunidad
- *   POST   /api/oportunidades          -> crea (201)
- *   PUT    /api/oportunidades/{id}     -> actualiza
- *   DELETE /api/oportunidades/{id}     -> elimina (204)
- */
 @RestController
 @RequestMapping("/api/oportunidades")
 public class OportunidadController {
-
     private final OportunidadService servicio;
 
     public OportunidadController(OportunidadService servicio) {

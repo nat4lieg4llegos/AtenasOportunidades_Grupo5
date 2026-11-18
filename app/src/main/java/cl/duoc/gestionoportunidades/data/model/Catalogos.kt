@@ -1,6 +1,5 @@
 package cl.duoc.gestionoportunidades.data.model
 
-/** Valores definidos por el caso semestral "Gestión móvil de oportunidades y activaciones corporativas". */
 object Catalogos {
     val TIPOS = listOf(
         "Evento corporativo", "Feria empresarial", "Actividad municipal", "Jornada de beneficios",
@@ -40,7 +39,6 @@ object Catalogos {
         "Los Ríos", "Los Lagos", "Aysén", "Magallanes"
     )
 
-    /** Asocia el nombre que entrega el geocodificador (p. ej. "Región Metropolitana de Santiago") con el catálogo. */
     fun regionDesdeTexto(texto: String?): String? {
         if (texto.isNullOrBlank()) return null
         val normal = normalizar(texto)

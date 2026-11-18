@@ -25,11 +25,6 @@ import cl.duoc.gestionoportunidades.viewmodels.MainViewModel
 
 private const val DURACION = 320
 
-/**
- * Grafo de navegación: Login → Inicio → Lista → Detalle → (Formulario | Seguimiento).
- * Las pantallas no usan el NavController directamente: piden la navegación a MainViewModel,
- * y aquí se escuchan esos eventos y se ejecutan. Todas las transiciones son animadas.
- */
 @Composable
 fun AppNavigation(
     haySesion: Boolean,
@@ -38,12 +33,10 @@ fun AppNavigation(
 ) {
     val navController = rememberNavController()
 
-    // Escuchar los eventos de navegación emitidos por el ViewModel.
     LaunchedEffect(Unit) {
         viewModel.navigationEvents.collect { evento -> ejecutar(navController, evento) }
     }
 
-    // Al tocar una notificación se abre directamente la ficha de esa oportunidad.
     LaunchedEffect(oportunidadInicial) {
         if (haySesion && oportunidadInicial != null && oportunidadInicial > 0) {
             viewModel.navigateTo(Screen.Detalle(oportunidadInicial))
@@ -85,7 +78,6 @@ fun AppNavigation(
                 alVolver = { viewModel.navigateUp() },
                 alGuardar = { idGuardado ->
                     if (id == 0L) {
-                        // Alta nueva: se reemplaza el formulario por la ficha recién creada.
                         viewModel.navigateTo(
                             Screen.Detalle(idGuardado),
                             popUpTo = Screen.Formulario(),
@@ -119,7 +111,6 @@ fun AppNavigation(
     }
 }
 
-/** Ejecuta un evento de navegación con el NavController. */
 private fun ejecutar(navController: NavHostController, evento: NavigationEvent) {
     when (evento) {
         is NavigationEvent.NavigateTo -> {
@@ -129,11 +120,9 @@ private fun ejecutar(navController: NavHostController, evento: NavigationEvent) 
                 }
                 launchSingleTop = evento.singleTop
             }
-            // El mensaje queda en la pantalla a la que se acaba de llegar.
             evento.mensaje?.let { navController.currentBackStackEntry?.savedStateHandle?.set(Screen.CLAVE_MENSAJE, it) }
         }
         is NavigationEvent.PopBackStack -> {
-            // El mensaje queda en la pantalla a la que se vuelve.
             evento.mensaje?.let { navController.previousBackStackEntry?.savedStateHandle?.set(Screen.CLAVE_MENSAJE, it) }
             navController.popBackStack()
         }

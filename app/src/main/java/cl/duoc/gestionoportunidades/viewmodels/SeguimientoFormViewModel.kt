@@ -57,7 +57,6 @@ class SeguimientoFormViewModel(app: Application) : AndroidViewModel(app) {
 
     fun onRecordatorio(v: Boolean) = _estado.update { it.copy(form = it.form.copy(crearRecordatorio = v)) }
 
-    /** Valida antes de pedir permisos: la pantalla solo pide el permiso si el formulario es válido. */
     fun validar(): Boolean {
         val r = ValidadorSeguimiento.validar(_estado.value.form)
         if (!r.esValido) {

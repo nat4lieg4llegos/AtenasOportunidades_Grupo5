@@ -1,6 +1,5 @@
 package cl.duoc.atenas.api.exception;
 
-/** Error de una regla del caso que involucra más de un campo (la API responde 400). */
 public class ReglaNegocioException extends RuntimeException {
     private final String campo;
 

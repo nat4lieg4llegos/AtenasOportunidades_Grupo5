@@ -7,13 +7,8 @@ import android.database.sqlite.SQLiteOpenHelper
 import cl.duoc.gestionoportunidades.data.model.Fechas
 import java.time.LocalDate
 
-/**
- * Base de datos local SQLite (el caso indica "Room o SQLite").
- * Tablas: oportunidades y seguimientos (historial), relacionadas por clave foránea.
- */
 class AtenasDbHelper(context: Context) :
     SQLiteOpenHelper(context.applicationContext, NOMBRE_BD, null, VERSION) {
-
     override fun onConfigure(db: SQLiteDatabase) {
         super.onConfigure(db)
         db.setForeignKeyConstraintsEnabled(true)
@@ -77,10 +72,6 @@ class AtenasDbHelper(context: Context) :
         insertarDatosDemo(db)
     }
 
-    /**
-     * Migración: la versión 1 (EP2) no tenía sincronización. En vez de borrar la base,
-     * se agregan las columnas nuevas, así el usuario no pierde sus oportunidades al actualizar la app.
-     */
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         if (oldVersion < 2) {
             db.execSQL("ALTER TABLE ${Tablas.OPORTUNIDADES} ADD COLUMN remote_id INTEGER")
@@ -89,16 +80,10 @@ class AtenasDbHelper(context: Context) :
         }
     }
 
-    /** Ids del servidor que se borraron en el teléfono sin conexión y faltan por borrar allá. */
     private fun crearTablaEliminacionesPendientes(db: SQLiteDatabase) {
         db.execSQL("CREATE TABLE IF NOT EXISTS ${Tablas.ELIMINACIONES_PENDIENTES} (remote_id INTEGER PRIMARY KEY)")
     }
 
-    /**
-     * Datos sintéticos de demostración: se insertan solo al crear la base, por lo que
-     * si el usuario los elimina no vuelven a aparecer. Las fechas son relativas a hoy
-     * para que siempre existan eventos próximos y un seguimiento atrasado que mostrar.
-     */
     private fun insertarDatosDemo(db: SQLiteDatabase) {
         val hoy = LocalDate.now()
         val ahora = Fechas.marcaTiempo()

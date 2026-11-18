@@ -52,10 +52,6 @@ import cl.duoc.gestionoportunidades.data.model.Fechas
 import java.time.Instant
 import java.time.ZoneOffset
 
-/**
- * Mensaje de apoyo bajo cada campo: muestra el error (con ícono de advertencia) o, si no hay error,
- * una ayuda opcional. Así todos los campos tienen la misma retroalimentación visual.
- */
 @Composable
 private fun TextoApoyo(error: String?, ayuda: String?) {
     when {
@@ -72,7 +68,6 @@ private fun IconoEstadoCampo(error: String?, valido: Boolean) {
     }
 }
 
-/** Campo de texto con ícono descriptivo, ícono de error/válido y mensaje por campo. */
 @Composable
 fun CampoTexto(
     etiqueta: String,
@@ -108,7 +103,6 @@ fun CampoTexto(
     )
 }
 
-/** Selector desplegable (lista cerrada de valores del caso). */
 @Composable
 fun CampoSelector(
     etiqueta: String,
@@ -142,7 +136,6 @@ fun CampoSelector(
             singleLine = true,
             modifier = Modifier.fillMaxWidth()
         )
-        // Capa transparente que abre el menú al tocar cualquier parte del campo.
         Box(
             Modifier
                 .matchParentSize()
@@ -163,7 +156,6 @@ fun CampoSelector(
     }
 }
 
-/** Campo de fecha DD/MM/AAAA: se puede escribir o elegir desde el calendario Material 3. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CampoFecha(
@@ -214,7 +206,6 @@ fun CampoFecha(
     }
 }
 
-/** Grupo de chips de selección única (p. ej. prioridad). */
 @OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
 @Composable
 fun SelectorChips(
@@ -242,7 +233,6 @@ fun SelectorChips(
     }
 }
 
-/** Casilla de verificación con mensaje de error animado. */
 @Composable
 fun CampoCasilla(texto: String, marcado: Boolean, alCambiar: (Boolean) -> Unit, error: String? = null) {
     Column {
@@ -259,7 +249,6 @@ fun CampoCasilla(texto: String, marcado: Boolean, alCambiar: (Boolean) -> Unit, 
     }
 }
 
-/** Mensaje de error con ícono que aparece/desaparece con animación. */
 @Composable
 fun MensajeError(error: String?, modifier: Modifier = Modifier) {
     AnimatedVisibility(

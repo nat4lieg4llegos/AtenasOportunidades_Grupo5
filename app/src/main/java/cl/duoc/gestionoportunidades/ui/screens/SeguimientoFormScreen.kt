@@ -66,7 +66,6 @@ fun SeguimientoFormScreen(
     LaunchedEffect(estado.guardado) { if (estado.guardado) alGuardar(estado.mensajeGuardado.orEmpty()) }
     LaunchedEffect(estado.intentosFallidos) { if (estado.intentosFallidos > 0) scroll.animateScrollTo(0) }
 
-    // Se guarda igual si el permiso se rechaza: el recordatorio es un apoyo, no un requisito.
     val permisoNotificaciones = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { vm.guardar() }
 
     Scaffold(
