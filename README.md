@@ -177,4 +177,4 @@ Las pantallas no navegan solas: le piden la navegación a `MainViewModel`, que e
 **Microservicio:** Java 17 · Spring Boot 3 · Spring Data JPA · H2 · JUnit 5 + MockMvc
 
 ## Planificación
-Tablero Trello: https://trello.com/b/VBLXAElU/atenasoportunidadesgrupo5-ep3-api-rest-dsy1105
+Tablero Trello: https://trello.com/b/wLAJs7FL/atenas-oportunidades-ep2-dsy1105
