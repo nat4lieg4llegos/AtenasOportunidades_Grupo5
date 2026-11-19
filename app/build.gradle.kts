@@ -19,11 +19,21 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = rootProject.file("keystore/atenas_equipo5.jks")
+            storePassword = "Atenas2026Equipo5"
+            keyAlias = "atenas_equipo5"
+            keyPassword = "Atenas2026Equipo5"
+        }
+    }
+
     buildTypes {
         release {
             optimization {
                 enable = false
             }
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
